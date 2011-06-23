@@ -3,7 +3,7 @@
   "name": "xlate",
   "description": "Select text on any website; right-click and choose 'Translate to English'. Text will be replaced inline.",
   "icons": { "128": "128.png" },
-  "version": "2",
+  "version": "3",
   "permissions": [
     "contextMenus",
     "tabs",
