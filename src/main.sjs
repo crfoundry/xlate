@@ -1,4 +1,23 @@
-var tabutil = require('github:afri/sjs4chromeapps/master/tab-util');
+function log(x) { console.log(x); }
+
+while (1) {
+  var delay = 1000;
+  waitfor {
+    var tabutil = require('github:afri/sjs4chromeapps/master/tab-util');
+  }
+  or {
+    // 10s timeout before we retry
+    hold(10000);
+  }
+  catch (e) {}
+  if (tabutil) break;
+  // retrying with backoff:
+  log('retrying to get github:tabutil in '+delay/1000+'s');
+  hold(delay);
+  delay*=2;
+}
+
+log('have tabutil');
 
 exports.main = function() {
   chrome.contextMenus.create(
@@ -8,7 +27,12 @@ exports.main = function() {
 };
 
 function translateTabSelection(info, tab) {
-  if (info.frameUrl) return; // XXX we can't translate in frames yet
+  if (info.frameUrl) {
+    // XXX
+    log("Can't translate text in frames yet ("+info.frameUrl+")");
+    return; 
+  }
+
   waitfor {
     // delegate translation to a content script:
     tabutil.$evalInTab(tab.id, "require('content-main').translateSelection('en')");
